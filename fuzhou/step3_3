@@ -1,0 +1,29 @@
+《统计2023和2024的诉求数量》
+
+
+CREATE TABLE IF NOT EXISTS data_table (
+    file_name STRING,
+    appeal_number STRING,
+    appeal_title STRING,
+    appeal_content STRING,
+    appeal_time STRING,
+    event_location STRING,
+    reply_opinion STRING,
+    reply_department STRING,
+    reply_time STRING
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE;
+
+LOAD DATA LOCAL INPATH '/home/ubuntu/Downloads/data.csv' OVERWRITE INTO TABLE data_table;
+
+
+-- 提取和处理日期数据，并统计2023和2024年的事件数量
+SELECT
+    SUBSTR(appeal_time, 1, 4) AS year,
+    COUNT(*) AS events_count
+FROM data_table
+WHERE SUBSTR(appeal_time, 1, 4) IN ('2023', '2024')
+GROUP BY SUBSTR(appeal_time, 1, 4)
+ORDER BY year;

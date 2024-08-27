@@ -1,0 +1,27 @@
+《统计2023每个月的诉求数量》
+
+CREATE TABLE IF NOT EXISTS data_table (
+    file_name STRING,
+    appeal_number STRING,
+    appeal_title STRING,
+    appeal_content STRING,
+    appeal_time STRING,
+    event_location STRING,
+    reply_opinion STRING,
+    reply_department STRING,
+    reply_time STRING
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE;
+
+LOAD DATA LOCAL INPATH '/home/ubuntu/Downloads/data.csv' OVERWRITE INTO TABLE data_table;
+
+-- 提取和处理日期数据
+SELECT
+    SUBSTR(appeal_time, 1, 7) AS month,
+    COUNT(*) AS events_count
+FROM data_table
+WHERE SUBSTR(appeal_time, 1, 4) = '2023'
+GROUP BY SUBSTR(appeal_time, 1, 7)
+ORDER BY month;

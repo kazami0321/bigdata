@@ -1,0 +1,26 @@
+《统计标签中存在“公积金”等词的数量》
+
+CREATE TABLE IF NOT EXISTS data_table (
+    file_name STRING,
+    appeal_number STRING,
+    appeal_title STRING,
+    appeal_content STRING,
+    appeal_time STRING,
+    event_location STRING,
+    reply_opinion STRING,
+    reply_department STRING,
+    reply_time STRING
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE;
+
+LOAD DATA LOCAL INPATH '/home/ubuntu/Downloads/data.csv' OVERWRITE INTO TABLE data_table;
+
+
+SELECT
+    SUM(CASE WHEN LOWER(appeal_title) LIKE '%公积金%' THEN 1 ELSE 0 END) AS count_gjj,
+    SUM(CASE WHEN LOWER(appeal_title) LIKE '%医保%' THEN 1 ELSE 0 END) AS count_yibao,
+    SUM(CASE WHEN LOWER(appeal_title) LIKE '%小学%' THEN 1 ELSE 0 END) AS count_xiaoxue,
+    SUM(CASE WHEN LOWER(appeal_title) LIKE '%电动车%' THEN 1 ELSE 0 END) AS count_diandongche
+FROM data_table;

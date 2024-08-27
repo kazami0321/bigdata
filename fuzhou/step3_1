@@ -1,0 +1,24 @@
+《查询每个文件的处理天数》
+
+CREATE TABLE IF NOT EXISTS data_table (
+    file_name STRING,
+    appeal_number STRING,
+    appeal_title STRING,
+    appeal_content STRING,
+    appeal_time STRING,
+    event_location STRING,
+    reply_opinion STRING,
+    reply_department STRING,
+    reply_time STRING
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE;
+
+LOAD DATA LOCAL INPATH '/home/ubuntu/Downloads/data.csv' OVERWRITE INTO TABLE data_table;
+
+SELECT DATEDIFF(reply_time, appeal_time) AS processing_days, COUNT(*) AS count
+FROM data_table
+WHERE reply_time IS NOT NULL AND appeal_time IS NOT NULL
+GROUP BY DATEDIFF(reply_time, appeal_time)
+ORDER BY processing_days;
